@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-do list</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto&display=swap');
+
+        @font-face {
+            font-family: 'autograph';
+            src: url(fonts/Autography.otf);
+        }
+
+        @font-face {
+            font-family: 'akiona';
+            src: url(fonts/Akiona.otf);
+        }
+
+        body {
+            font-family: 'akiona';
+        }
+
+        .container {
+            display: flex;
+            height: 97vh;
+        }
+
+        .title {
+            font-family: 'autograph';
+            width: 50vw;
+            background-color: white;
+            text-align: center;
+            align-self: center;
+        }
+
+        .title img {
+            height: 40px;
+        }
+
+        h1 {
+            font-size: 4rem;
+            text-align: center;
+            margin-top: 0;
+        }
+        
+        table, th, td {
+            border: none;
+            background-color: none;
+        }
+
+        th {
+            text-align: left;
+            font-size: 2rem;
+        }
+
+        td {
+            padding-left: 0.5rem;
+            transition: 0.5s all ease;
+            font-size: 1.5rem;
+            padding-top: 1rem;
+        }
+
+        td:hover {
+            background-color: rgb(204, 204, 204);
+        }
+
+        table {
+            margin-top: 3rem;
+            margin-bottom: 5rem;
+            margin-left: 5rem;
+        }
+
+        .todolist {
+            width: 50vw;
+            margin: 0 auto;
+            background-image: url(images/GettyImages_5776604046.jpg);
+            background-size: cover;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+
+        .things {
+            width: 370px;
+        }
+
+        #submit {
+            align-self: center;
+        }
+
+        .remove {
+            cursor: pointer;
+            width: 20px;
+        }
+
+        input {
+            border: none;
+            background-color: white;
+            font-size: 1.5rem;
+            font-family: 'akiona';
+        }
+
+        .fa-pen-to-square {
+            cursor: pointer;
+        }
+
+        @media screen and (max-width: 1000px) {
+            .title {
+                display: none;
+            }
+
+            .todolist {
+                width: 100vw;
+                background-size: cover;
+                background-repeat: no-repeat;
+            }
+
+            table {
+                align-self: center;
+            }
+        }
+
+        @media screen and (max-width: 431px) {
+            .title {
+                display: none;
+            }
+
+            .todolist {
+                background-size: cover;
+                background-repeat: repeat;
+                background-position: center;
+                margin: 0;
+                padding: 0.5rem;
+                width: 100vw;
+            }
+
+            table {
+                margin-left: 0.5rem;
+                padding-top: 2rem;
+                width: 300px;
+            }
+
+            .things {
+                width: auto;
+                max-width: 200px;
+                word-wrap: break-word;
+            }
+
+            td {
+                font-size: 1.2rem;
+                padding-top: 0.5rem;
+            }
+
+            #submit {
+                padding: 0.5rem;
+            }
+
+            input {
+                font-size: 1.2rem;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            <h1>Moja to-do lista</h1>
+            <img src="images/pngkit_squiggly-line-png_9738802.png"><img src="images/764599.png"><img src="images/pngkit_squiggly-line-png_9738803.png">
+        </div>
+        <div class="todolist">
+        <table>
+            <thead>
+                <tr>
+                    <th class="things">Što trebam napraviti?</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="mainData"></tbody>
+        </table>
+
+            <div id="submit">
+                <input type="text" placeholder="Unesite stavku za listu" id="input"><i onclick="dodajStavku()" class="fa-solid fa-pen-to-square fa-2x"></i>
+                <p id="greska"></p>
+            </div>    
+        </div>
+    </div>
+
+    <script>
+        var myContainer = document.getElementById("mainData");
+        var input = document.getElementById("input");
+
+        if (localStorage.getItem("lista") != null) {
+            var allEntries = JSON.parse(localStorage.getItem("lista"));
+        } else {
+            var allEntries = [];
+        }
+    
+        function dodajStavku() {            
+            var newEntry = input.value.trim();
+
+            if (newEntry !== "") {
+                allEntries.push(newEntry);
+                localStorage.setItem("lista", JSON.stringify(allEntries));
+                
+                input.value = "";
+                document.getElementById("greska").innerHTML = "";
+
+                popuniTablicu();
+            } else {
+                document.getElementById("greska").innerHTML = "Unesite stavku!";
+            }
+        }
+    
+        function popuniTablicu() {
+            myContainer.innerHTML = "";
+    
+            for (let i = 0; i < allEntries.length; i++) {
+                myContainer.innerHTML += `<tr><td class="things">${allEntries[i]}</td><td class="remove" onclick="ukloniStavku(${i})">X</td>`;
+            }
+        }
+    
+        popuniTablicu();
+    
+        function ukloniStavku(index) {
+            allEntries.splice(index, 1);
+    
+            localStorage.setItem("lista", JSON.stringify(allEntries));
+    
+            popuniTablicu();
+        }
+    </script>
+    
+</body>
+</html>
